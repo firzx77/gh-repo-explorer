@@ -1,37 +1,65 @@
-# Welcome to Remix!
+# GH-Repo-Explorer
 
-- [Remix Docs](https://remix.run/docs)
+GH-Repo-Explorer is a web application that allows you to search and explore Github repositories. This project is built using the Remix framework, a fullstack framework based on react-router. The UI is styled with Tailwind CSS and it is fully keyboard accessible.
 
-## Development
+## Getting Started
 
-You will be running two processes during development:
+### Prerequisites
 
-- The Miniflare server (miniflare is a local environment for Cloudflare Workers)
-- The Remix development server
+To run this project locally, you will need to have Node.js installed on your machine. If you don't have it installed, you can download it from https://nodejs.org.
 
-Both are started with one command:
+### Installation
 
-```sh
+Clone the repository to your local machine.
+
+```
+git clone https://github.com/firzx77/gh-repo-explorer.git
+```
+
+Create a `.env` file at the root of the project with your GH_TOKEN.
+
+```
+GH_TOKEN=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
+```
+
+You can use the provided token or generate your own Github personal access token with the repo scope.
+
+Install the dependencies.
+
+```
+npm install
+```
+
+Start the development server.
+
+```
 npm run dev
 ```
 
-Open up [http://127.0.0.1:8787](http://127.0.0.1:8787) and you should be ready to go!
+The application should now be running at http://localhost:8787.
 
-If you want to check the production build, you can stop the dev server and run following commands:
+### Testing
 
-```sh
-npm run build
-npm start
+To run the tests, run the following command:
+
+```
+npm run test
 ```
 
-Then refresh the same URL in your browser (no live reload for production builds).
+### Deployment
 
-## Deployment
+This project has been deployed to Cloudflare Workers and it is accessible at https://gh-repo-explorer.farizzx77.workers.dev/.
 
-If you don't already have an account, then [create a cloudflare account here](https://dash.cloudflare.com/sign-up) and after verifying your email address with Cloudflare, go to your dashboard and set up your free custom Cloudflare Workers subdomain.
+### Usage
 
-Once that's done, you should be able to deploy your app:
+Once you have the application running, you can use it to search and explore Github repositories. The UI is very user-friendly and allows you to enter a Github username and see all of their repositories. By default, the application will display the first 5 repositories.
 
-```sh
-npm run deploy
-```
+To improve the performance, the application limits the number of repositories displayed to 5 per page. If you want to see more repositories, you can click on the "Load more" button at the bottom of the page.
+
+### Acknowledgements
+
+- Remix framework: [https://remix.run/](https://remix.run/)
+- Tailwind CSS: [https://tailwindcss.com/](https://tailwindcss.com/)
+- Github API: [https://docs.github.com/en/rest](https://docs.github.com/en/rest)
+- Illustration: [https://undraw.co/](https://undraw.co/)
+- Icons: [https://heroicons.com/](https://heroicons.com/) and [https://iconify.design/](https://iconify.design/)
