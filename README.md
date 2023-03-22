@@ -1,4 +1,4 @@
-![ss](https://raw.githubusercontent.com/firzx77/gh-repo-explorer/main/app-ss.png | width=300)
+![ss](https://raw.githubusercontent.com/firzx77/gh-repo-explorer/main/app-ss.png)
 
 # GH-Repo-Explorer
 
