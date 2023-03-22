@@ -4,10 +4,6 @@ GH-Repo-Explorer is a web application that allows you to search and explore Gith
 
 ## Getting Started
 
-### Prerequisites
-
-To run this project locally, you will need to have Node.js installed on your machine. If you don't have it installed, you can download it from https://nodejs.org.
-
 ### Installation
 
 Clone the repository to your local machine.
