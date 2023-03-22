@@ -1,7 +1,9 @@
 {
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
+    "types": ["vitest/importMeta", "vitest/globals"],
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "module": "ESNext",
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

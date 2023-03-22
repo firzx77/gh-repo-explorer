@@ -40,7 +40,7 @@ const SearchResults = (props: SearchResultsProps) => {
   }, [fetcher]);
 
   return (
-    <div>
+    <div data-testid="searchresutls">
       <div className="mb-3 text-gray-400">
         Showing users for "{props.username}"
       </div>

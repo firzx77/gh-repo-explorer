@@ -1,3 +1,11 @@
+import * as RTL from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/dom";
+import * as Mocks from "~/mocks";
+
+import * as RemixServer from "@remix-run/cloudflare";
+import * as RemixReact from "@remix-run/react";
+
 import {
   Form,
   useLoaderData,
@@ -20,6 +28,10 @@ export type listUsers = Endpoints["GET /search/users"]["response"];
 
 interface UIState {
   state: "INIT" | "LOADING" | "NOTFOUND" | "SEARCHRESULTS" | "ERROR";
+}
+
+interface IndexProps {
+  error?: ErrorEvent;
 }
 
 export async function loader({ context, request }: LoaderArgs) {
@@ -59,7 +71,7 @@ const views: {
   ERROR: (props) => <Error error={props.error} />,
 };
 
-export default function Index({ error }: ErrorEvent) {
+export default function Index({ error }: IndexProps) {
   const data = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const state = useRef<UIState["state"]>("INIT");
@@ -83,6 +95,8 @@ export default function Index({ error }: ErrorEvent) {
     state.current = "NOTFOUND";
   }
 
+  console.log("state.current", state.current, data, navigation);
+
   return (
     <div className="bg-slate-300 min-h-screen">
       <div className="ml-auto mr-auto max-w-xl pt-5 pb-10 min-h-screen flex items-center justify-center flex-col">
@@ -92,6 +106,7 @@ export default function Index({ error }: ErrorEvent) {
             GitHub repositories explorer
           </h1>
           <Form
+            data-testid="search-form"
             id="search"
             method="get"
             onSubmit={() => {
@@ -127,6 +142,7 @@ export default function Index({ error }: ErrorEvent) {
                 )}
               </div>
               <input
+                data-testid="search-input"
                 defaultValue={searchParams.get("username") ?? ""}
                 name="username"
                 className="rounded-full h-10 pl-12 pr-5 w-full shadow-md border border-slate-100"
@@ -134,11 +150,11 @@ export default function Index({ error }: ErrorEvent) {
               />
             </div>
           </Form>
-          <div className="relative">
+          <div data-testid="screen-wrapper" className="relative">
             {views[state.current]({
               data,
               username: searchParams.get("username") ?? "",
-              error: error?.message,
+              error: error?.message ?? "",
             })}
           </div>
         </div>
@@ -149,3 +165,61 @@ export default function Index({ error }: ErrorEvent) {
 }
 
 export const ErrorBoundary = Index;
+
+if (process.env.NODE_ENV === "test" && import.meta.vitest) {
+  let { describe, test, expect, vi } = import.meta.vitest;
+
+  vi.mock("@remix-run/react", () => Mocks.createRemixReactMock({ path: "/" }));
+  let RemixReactMock = RemixReact as unknown as ReturnType<
+    typeof Mocks.createRemixReactMock
+  >;
+
+  describe("component", () => {
+    beforeEach(() => {
+      RemixReactMock.useLoaderData.mockReturnValue([]);
+      RemixReactMock.useSearchParams.mockReturnValue([new URLSearchParams()]);
+      RemixReactMock.useNavigation.mockReturnValue({
+        formAction: undefined,
+        formData: undefined,
+        formEncType: undefined,
+        formMethod: undefined,
+        location: undefined,
+        state: "idle",
+      });
+    });
+
+    test("render search input", () => {
+      let { getByTestId } = RTL.render(<Index />);
+      expect(getByTestId("search-input")).toBeDefined();
+    });
+
+    test("query params reflect in search input value", () => {
+      RemixReactMock.useSearchParams.mockReturnValue([
+        new URLSearchParams({
+          username: "John",
+        }),
+      ]);
+      let { getByTestId } = RTL.render(<Index />);
+      expect(getByTestId("search-input").getAttribute("value")).toBe("John");
+    });
+
+    test("should show init screen, when query params empty", () => {
+      RemixReactMock.useSearchParams.mockReturnValue([new URLSearchParams({})]);
+      let { getByTestId } = RTL.render(<Index />);
+      expect(getByTestId("init")).toBeDefined();
+    });
+
+    test("should show notfound screen, and match query params", () => {
+      RemixReactMock.useSearchParams.mockReturnValue([
+        new URLSearchParams({
+          username: "test12345",
+        }),
+      ]);
+      RemixReactMock.useLoaderData.mockReturnValue([]);
+      let { getByTestId } = RTL.render(<Index />);
+      expect(getByTestId("notfound-text").textContent).toBe(
+        'No user found for "test12345".'
+      );
+    });
+  });
+}

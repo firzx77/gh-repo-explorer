@@ -8,7 +8,9 @@
     "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch",
     "dev": "npm-run-all build --parallel \"dev:*\"",
     "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "run-p test:*",
+    "test:unit": "vitest run --coverage"
   },
   "dependencies": {
     "@remix-run/cloudflare": "^1.14.3",
@@ -18,20 +20,27 @@
     "isbot": "^3.6.5",
     "octokit": "^2.0.14",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-spring": "^9.7.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.18.0",
+    "@playwright/test": "^1.31.2",
     "@remix-run/dev": "^1.14.3",
     "@remix-run/eslint-config": "^1.14.3",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@vitejs/plugin-react": "^3.1.0",
+    "@vitest/coverage-c8": "^0.29.7",
     "eslint": "^8.27.0",
+    "jsdom": "^21.1.1",
     "miniflare": "^2.11.0",
     "npm-run-all": "^4.1.5",
+    "react-router": "^6.9.0",
     "tailwindcss": "^3.2.7",
     "typescript": "^4.8.4",
+    "vitest": "^0.29.7",
     "wrangler": "^2.2.1"
   },
   "engines": {
