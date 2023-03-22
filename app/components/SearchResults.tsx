@@ -21,7 +21,6 @@ const SearchResults = (props: SearchResultsProps) => {
   const fetcher = useFetcher();
   const [fetched, setFetched] = useState<FetchedData>({});
   useEffect(() => {
-    console.log("fetcher", fetcher);
     if (fetcher.data && fetcher.type === "done") {
       setFetched((prevState) => ({
         ...prevState,

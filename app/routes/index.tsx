@@ -4,7 +4,7 @@ import {
   useNavigation,
   useSearchParams,
 } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/cloudflare";
+import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/cloudflare";
 import { Octokit } from "octokit";
 import { Endpoints } from "@octokit/types";
 import { useRef } from "react";
@@ -12,13 +12,14 @@ import Init from "~/components/Init";
 import Loading from "~/components/Loading";
 import NotFound from "~/components/NotFound";
 import SearchResults from "~/components/SearchResults";
+import Error from "~/components/Error";
 import HomeIllustration from "~/components/HomeIllustration";
 import Footer from "~/components/Footer";
 
 export type listUsers = Endpoints["GET /search/users"]["response"];
 
 interface UIState {
-  state: "INIT" | "LOADING" | "NOTFOUND" | "SEARCHRESULTS";
+  state: "INIT" | "LOADING" | "NOTFOUND" | "SEARCHRESULTS" | "ERROR";
 }
 
 export async function loader({ context, request }: LoaderArgs) {
@@ -46,6 +47,7 @@ const views: {
   [key: string]: (props: {
     username: string;
     data: listUsers["data"]["items"];
+    error: string;
   }) => React.ReactElement;
 } = {
   INIT: () => <Init />,
@@ -54,15 +56,18 @@ const views: {
   SEARCHRESULTS: (props) => (
     <SearchResults data={props.data} username={props.username} />
   ),
+  ERROR: (props) => <Error error={props.error} />,
 };
 
-export default function Index() {
+export default function Index({ error }: ErrorEvent) {
   const data = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const state = useRef<UIState["state"]>("INIT");
   const navigation = useNavigation();
 
-  if (navigation.state === "idle" && data?.length > 0) {
+  if (error) {
+    state.current = "ERROR";
+  } else if (navigation.state === "idle" && data?.length > 0) {
     state.current = "SEARCHRESULTS";
   } else if (
     navigation.state === "idle" &&
@@ -133,6 +138,7 @@ export default function Index() {
             {views[state.current]({
               data,
               username: searchParams.get("username") ?? "",
+              error: error?.message,
             })}
           </div>
         </div>
@@ -141,3 +147,5 @@ export default function Index() {
     </div>
   );
 }
+
+export const ErrorBoundary = Index;
