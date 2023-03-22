@@ -73,7 +73,7 @@ export default function Index() {
   } else if (
     navigation.state === "idle" &&
     data?.length === 0 &&
-    searchParams.get("username") !== ""
+    searchParams.get("username") !== null
   ) {
     state.current = "NOTFOUND";
   }
