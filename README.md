@@ -1,3 +1,5 @@
+![ss](https://raw.githubusercontent.com/firzx77/gh-repo-explorer/main/app-ss.png | width=300)
+
 # GH-Repo-Explorer
 
 GH-Repo-Explorer is a web application that allows you to search and explore Github repositories. This project is built using the Remix framework, a fullstack framework based on react-router. The UI is styled with Tailwind CSS and it is fully keyboard accessible.
